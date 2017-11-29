@@ -13,6 +13,7 @@ import org.junit.Test;
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static org.junit.Assert.*;
 
@@ -56,11 +57,45 @@ public class LoginActivityTest {
         assertNotNull(view);
     }
     @Test
-    public void checklogintest(){
+    public void checklogintestwithcorrectcredentials(){
     assertNotNull(lActivity.findViewById(R.id.btn_login));
+    onView(withId(R.id.til_email)).perform(typeText("patient@app.com"));
+    onView(withId(R.id.til_password)).perform(typeText("password"));
     onView(withId(R.id.btn_login)).perform(click());
     Activity SecondActivity=getInstrumentation().waitForMonitorWithTimeout(monitor,5000);
     assertNotNull(SecondActivity);
     SecondActivity.finish();
+    }
+
+    @Test
+    public void checklogintestwithwrongcredentials(){
+        assertNotNull(lActivity.findViewById(R.id.btn_login));
+        onView(withId(R.id.til_email)).perform(typeText("notregistered@app.com"));
+        onView(withId(R.id.til_password)).perform(typeText("password"));
+        onView(withId(R.id.btn_login)).perform(click());
+        Activity SecondActivity=getInstrumentation().waitForMonitorWithTimeout(monitor,5000);
+        assertNull(SecondActivity);
+        SecondActivity.finish();
+    }
+
+    @Test
+    public void checklogintestwithemptyfields_mail(){
+        assertNotNull(lActivity.findViewById(R.id.btn_login));
+        onView(withId(R.id.til_email)).perform(typeText(""));
+        onView(withId(R.id.til_password)).perform(typeText("password"));
+        onView(withId(R.id.btn_login)).perform(click());
+        Activity SecondActivity=getInstrumentation().waitForMonitorWithTimeout(monitor,5000);
+        assertNull(SecondActivity);
+        SecondActivity.finish();
+    }
+    @Test
+    public void checklogintestwithemptyfields_password(){
+        assertNotNull(lActivity.findViewById(R.id.btn_login));
+        onView(withId(R.id.til_email)).perform(typeText("patient@app.com"));
+        onView(withId(R.id.til_password)).perform(typeText(""));
+        onView(withId(R.id.btn_login)).perform(click());
+        Activity SecondActivity=getInstrumentation().waitForMonitorWithTimeout(monitor,5000);
+        assertNull(SecondActivity);
+        SecondActivity.finish();
     }
 }
